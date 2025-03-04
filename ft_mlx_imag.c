@@ -6,7 +6,7 @@
 /*   By: ylagzoul <ylagzoul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 10:51:04 by ylagzoul          #+#    #+#             */
-/*   Updated: 2025/02/28 11:37:19 by ylagzoul         ###   ########.fr       */
+/*   Updated: 2025/03/03 22:00:07 by ylagzoul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void count_height_width(t_game *game)
     while(game->map[y])
     {
         x = 0;
-        while(game->map[y][x])
+        while(game->map[y][x] && game->map[y][x] != '\n')
             x++;
         y++;
     }
@@ -37,18 +37,22 @@ void ft_mlx_imag(t_game *game)
     count_height_width(game);
     game->ptr = mlx_init();
     if(!game->ptr)
-        //free map
+        return(write(2,"Error\nmlx_init return NULL",26),ft_free_map(game));
     game->win = mlx_new_window(game->ptr, game->size_width, game->size_height, "so_long");
     if(!game->win)
-        //free map or free game->ptr
-    
+    {
+        write(2,"Error\nmlx_new_window return NULL", 33);
+        mlx_destroy_display(game->ptr);
+        free(game->ptr);
+        ft_free_map(game);
+    }
     game->wall = mlx_xpm_file_to_image(game->ptr,"textures/wall_imag.xpm",&x,&x);
     game->player = mlx_xpm_file_to_image(game->ptr,"textures/player.xpm",&x,&x);
     game->collectible = mlx_xpm_file_to_image(game->ptr,"textures/collectible_imag.xpm",&x,&x);
     game->exit = mlx_xpm_file_to_image(game->ptr,"textures/exit_imag.xpm",&x,&x);
     game->bg = mlx_new_image(game->ptr, SIZE, SIZE);
-    if (!game->player || !game->win || !game->wall || !game->collectible)
-        return(ft_free_strct(game));
+    if (!game->player || !game->exit || !game->wall || !game->collectible || !game->bg)
+        ft_free_strct(game);
     y = 0;
     while(game->map[y])
     {
@@ -75,8 +79,8 @@ void ft_mlx_imag1(t_game *game)
     int y;
 
     count_height_width(game);
-    game->player = mlx_xpm_file_to_image(game->ptr,"textures/player.xpm",&x,&x);
-    if (!game->player || !game->win || !game->wall || !game->collectible)
+    game->player = mlx_xpm_file_to_image(game->ptr,"textures/player.xpm",&x,&y);
+    if (!game->player)
         return(ft_free_strct(game));
     y = 0;
     while(game->map[y])

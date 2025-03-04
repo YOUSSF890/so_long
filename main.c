@@ -93,7 +93,7 @@ void ft_ft(t_game *game, int y1, int x1)
         {
             nbr = Number_of_collectible(game->map);
             if(nbr == 0)
-                exit(1);
+                ft_free_strct(game);
             return ;
         }
         else
@@ -114,7 +114,7 @@ int moving(int key, t_game *game)
     if (key == 115 || key == 119 || key == 100 || key == 97 || key == 65307)
     {
         if (key == 65307)
-            exit(1);
+            ft_free_strct(game);
         else if (key == 100)//d
                 ft_ft(game, game->y,game->x+1);
         else if (key == 119)//w
@@ -156,12 +156,10 @@ int main(int ac, char *argv[])
         ft_free_node(game);
         print_error2("Error\nThe Player can't win!\n");
     }
-    
     ft_free_copy(game);
     ft_mlx_imag(game);
     game->steps = 1;
     mlx_key_hook(game->win, moving, game);
     mlx_loop(game->ptr);
-    ft_free_map(game);
     return 0;
 }

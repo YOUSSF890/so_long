@@ -29,12 +29,19 @@ char    *ft_strdup1(const char *s1)
 void ft_free_strct(t_game *game)
 {
     int i;
+    if(game->player != NULL)
+        mlx_destroy_image(game->ptr, game->player);
+    if(game->wall != NULL)
+        mlx_destroy_image(game->ptr, game->wall);
+    if(game->collectible != NULL)
+        mlx_destroy_image(game->ptr, game->collectible);
+    if(game->exit != NULL)
+        mlx_destroy_image(game->ptr, game->exit);
+    if(game->bg != NULL)
+        mlx_destroy_image(game->ptr, game->bg);
+    mlx_destroy_window(game->ptr, game->win);
     mlx_destroy_display(game->ptr);
-    mlx_clear_window(game->ptr, game->win);
-    mlx_destroy_image(game->ptr, game->player);
-    mlx_destroy_image(game->ptr, game->wall);
-    mlx_destroy_image(game->ptr, game->collectible);
-    mlx_destroy_image(game->ptr, game->exit);
+    free(game->ptr);
     i = 0;
     while(game->map[i])
     {
@@ -43,6 +50,7 @@ void ft_free_strct(t_game *game)
     }
     free(game->map);
     free(game);
+    exit(1);
 }
 void print_error2(char *inpt)
 {
@@ -83,13 +91,6 @@ void ft_free_map(t_game *game)
         i++;
     }
     free(game->map);
-    i = 0;
-    while(game->map[i])
-    {
-        free(game->map[i]);
-        i++;
-    }
-    free(game->map);
     free(game);
     exit(1);
 }
@@ -117,6 +118,13 @@ void ft_free_node(t_game *game)
         i++;
     }
     free(game->copy);
+    i = 0;
+    while(game->map[i])
+    {
+        free(game->map[i]);
+        i++;
+    }
+    free(game->map);
     free(game);
 }
 
